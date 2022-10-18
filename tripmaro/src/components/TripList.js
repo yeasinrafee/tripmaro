@@ -1,15 +1,22 @@
-import {useEffect, useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import './TripList.css';
 
 export default function TripList() {
     const [trips, setTrip] = useState([]);
-    const [url, setUrl] = useState('http://localhost:3000/trips')
+    const [url, setUrl] = useState('http://localhost:3000/trips');
+
+    const fetchTrip = useCallback(async ()=>{
+        const response = await fetch(url);
+        const json = await response.json();
+        setTrip(json);
+    }, [url]);
 
     useEffect(() =>{
-        fetch(url)
-        .then((res) => res.json())
-        .then(json => setTrip(json))
-    }, [url]);
+        // fetch(url)
+        // .then((res) => res.json())
+        // .then(json => setTrip(json))
+        fetchTrip();
+    }, [fetchTrip]);
 
   return (
     <div className='trip-list'>
@@ -28,7 +35,7 @@ export default function TripList() {
             >Europe</button>
             <button
             onClick={() => setUrl('http://localhost:3000/trips')}
-            >America</button>
+            >All Trip</button>
         </div>
     </div>
   )
